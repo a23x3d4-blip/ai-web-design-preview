@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Mini ChatGPT-style Landing</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* small custom adjustments */
+    .glass {
+      background: rgba(255,255,255,0.06);
+      backdrop-filter: blur(6px);
+    }
+    .prompt-area:focus-within {
+      box-shadow: 0 0 0 4px rgba(99,102,241,0.08);
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-b from-slate-900 via-slate-900 to-slate-800 text-slate-100 min-h-screen antialiased">
+  <!-- Header -->
+  <header class="max-w-5xl mx-auto px-6 py-6 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 bg-emerald-400 rounded-lg flex items-center justify-center text-slate-900 font-bold">AI</div>
+      <div>
+        <h1 class="text-lg font-semibold">AI Chat</h1>
+        <p class="text-xs text-slate-400">Simple conversational landing</p>
+      </div>
+    </div>
+    <div class="flex items-center gap-3">
+      <button class="text-sm px-3 py-1 rounded-md border border-slate-700 hover:bg-white/5">Docs</button>
+      <button class="text-sm px-3 py-1 rounded-md bg-emerald-400 text-slate-900 font-medium hover:opacity-95">Sign in</button>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <main class="max-w-5xl mx-auto px-6 pb-12">
+    <section class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+      <div>
+        <h2 class="text-4xl font-extrabold leading-tight">Talk with your AI.<br /><span class="text-emerald-400">Ask, create, iterate.</span></h2>
+        <p class="mt-4 text-slate-300 max-w-xl">シンプルで直感的なチャットインターフェース。プロンプトを入力してすぐに会話を始められます。テンプレート例やサンプルを使えば、すぐに実用的な出力を得られます。</p>
+
+        <!-- Example cards -->
+        <div class="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <button class="bg-slate-800 glass px-4 py-3 rounded-lg text-left hover:bg-slate-700" onclick="useExample('英語の自己紹介を書いて')">
+            <div class="text-xs text-slate-400">例</div>
+            <div class="mt-1 text-sm">英語の自己紹介を書いて</div>
+          </button>
+          <button class="bg-slate-800 glass px-4 py-3 rounded-lg text-left hover:bg-slate-700" onclick="useExample('短いブログ記事のアウトラインを作って')">
+            <div class="text-xs text-slate-400">例</div>
+            <div class="mt-1 text-sm">短いブログ記事のアウトラインを作って</div>
+          </button>
+          <button class="bg-slate-800 glass px-4 py-3 rounded-lg text-left hover:bg-slate-700" onclick="useExample('旅行プランを3日分作って')">
+            <div class="text-xs text-slate-400">例</div>
+            <div class="mt-1 text-sm">旅行プランを3日分作って</div>
+          </button>
+        </div>
+      </div>
+
+      <!-- Chat mockup -->
+      <div>
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 shadow-lg">
+          <!-- messages -->
+          <div id="chat" class="space-y-3 h-72 overflow-auto px-2 py-1">
+            <div class="flex">
+              <div class="w-8 h-8 rounded-full bg-emerald-400 flex-shrink-0 mr-3 items-center justify-center hidden sm:flex">AI</div>
+              <div class="bg-slate-800 p-3 rounded-xl max-w-[80%] text-slate-100">こんにちは！何を手伝いましょうか？</div>
+            </div>
+          </div>
+
+          <!-- prompt area -->
+          <div class="mt-4">
+            <form id="promptForm" class="flex gap-3 items-center prompt-area p-3 rounded-lg border border-slate-800">
+              <input id="promptInput" type="text" placeholder="質問や依頼を入力してください（例：英語の自己紹介を書いて）" class="flex-1 bg-transparent outline-none text-sm text-slate-100 placeholder:text-slate-500" />
+              <button type="submit" class="ml-2 px-4 py-2 rounded-md bg-emerald-400 text-slate-900 font-medium">送信</button>
+            </form>
+            <div class="mt-2 text-xs text-slate-500">プロンプト入力後、送信ボタンでモック応答が追加されます（実際のAPI連携は任意で設定）。</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer / features -->
+    <section class="mt-10 grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="bg-slate-900 border border-slate-800 rounded-lg p-5">
+        <h3 class="font-semibold">生成が早い</h3>
+        <p class="mt-2 text-slate-400 text-sm">短い入力で瞬時に結果を生成します。</p>
+      </div>
+      <div class="bg-slate-900 border border-slate-800 rounded-lg p-5">
+        <h3 class="font-semibold">使いやすい</h3>
+        <p class="mt-2 text-slate-400 text-sm">シンプルなUIで誰でもすぐに利用可能。</p>
+      </div>
+      <div class="bg-slate-900 border border-slate-800 rounded-lg p-5">
+        <h3 class="font-semibold">カスタマイズ可能</h3>
+        <p class="mt-2 text-slate-400 text-sm">テンプレートやデザインを自由に変更できます。</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="max-w-5xl mx-auto px-6 py-8 text-slate-500 text-sm">
+    <div class="flex items-center justify-between">
+      <div>© 2025 AI Chat</div>
+      <div class="space-x-4">
+        <a class="hover:underline" href="#">Privacy</a>
+        <a class="hover:underline" href="#">Terms</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Minimal JS to mock responses and auto-scroll -->
+  <script>
+    const chat = document.getElementById('chat');
+    const form = document.getElementById('promptForm');
+    const input = document.getElementById('promptInput');
+
+    function addMessage(text, from='user') {
+      const wrapper = document.createElement('div');
+      wrapper.className = 'flex';
+      const bubble = document.createElement('div');
+      bubble.className = from === 'user'
+        ? 'ml-auto bg-emerald-500 p-3 rounded-xl max-w-[80%] text-slate-900'
+        : 'bg-slate-800 p-3 rounded-xl max-w-[80%]';
+      bubble.textContent = text;
+      wrapper.appendChild(bubble);
+      chat.appendChild(wrapper);
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    function useExample(text) {
+      input.value = text;
+      input.focus();
+    }
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const val = input.value.trim();
+      if (!val) return;
+      addMessage(val, 'user');
+      input.value = '';
+      // Mock "thinking"
+      const thinking = document.createElement('div');
+      thinking.className = 'flex';
+      thinking.innerHTML = '<div class="bg-slate-800 p-3 rounded-xl max-w-[80%]">...</div>';
+      chat.appendChild(thinking);
+      chat.scrollTop = chat.scrollHeight;
+
+      // simulate async response
+      setTimeout(() => {
+        thinking.remove();
+        // simple mock reply (for real use, call your API here)
+        const reply = `これはモック応答です：「${val}」についてのサンプル回答を生成しました。`;
+        addMessage(reply, 'ai');
+      }, 900 + Math.random() * 900);
+    });
+  </script>
+</body>
+</html>
