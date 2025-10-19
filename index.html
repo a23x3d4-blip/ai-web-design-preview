@@ -263,3 +263,73 @@
     postBox.scrollTop = postBox.scrollHeight;
   }
 </script>
+<!-- タブ切替と掲示板画面 -->
+<div class="tab-bar">
+  <div class="tab active" id="chatTab" onclick="switchTab('chat')">質問</div>
+  <div class="tab" id="newsTab" onclick="switchTab('news')">ニュース</div>
+  <div class="tab" id="boardTab" onclick="switchTab('board')">掲示板</div>
+</div>
+
+<div class="content" id="chatContent">
+  <!-- 質問画面の内容 -->
+</div>
+
+<div class="content" id="newsContent">
+  <!-- ニュース画面の内容 -->
+</div>
+
+<div class="content" id="boardContent">
+  <div class="board-box">
+    <div class="posts" id="postBox"></div>
+    <div class="input-area">
+      <textarea id="postInput" placeholder="投稿内容を入力..."></textarea>
+      <button onclick="postMessage()">投稿</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  function switchTab(tab) {
+    const chatTab = document.getElementById('chatTab');
+    const newsTab = document.getElementById('newsTab');
+    const boardTab = document.getElementById('boardTab');
+
+    const chatContent = document.getElementById('chatContent');
+    const newsContent = document.getElementById('newsContent');
+    const boardContent = document.getElementById('boardContent');
+
+    chatTab.classList.remove('active');
+    newsTab.classList.remove('active');
+    boardTab.classList.remove('active');
+
+    chatContent.classList.remove('active');
+    newsContent.classList.remove('active');
+    boardContent.classList.remove('active');
+
+    if (tab === 'chat') {
+      chatTab.classList.add('active');
+      chatContent.classList.add('active');
+    } else if (tab === 'news') {
+      newsTab.classList.add('active');
+      newsContent.classList.add('active');
+    } else if (tab === 'board') {
+      boardTab.classList.add('active');
+      boardContent.classList.add('active');
+    }
+  }
+
+  function postMessage() {
+    const input = document.getElementById('postInput');
+    const postBox = document.getElementById('postBox');
+    const text = input.value.trim();
+    if (text === '') return;
+
+    const post = document.createElement('div');
+    post.classList.add('post');
+    post.textContent = text;
+
+    postBox.appendChild(post);
+    input.value = '';
+    postBox.scrollTop = postBox.scrollHeight;
+  }
+</script>
