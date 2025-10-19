@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>質問・ニュース・掲示板サイト</title>
+  <title>質問・ニュース・掲示板統合サイト</title>
   <style>
     body {
       margin: 0;
@@ -63,7 +63,7 @@
     .message-box, .board-box {
       display: flex;
       flex-direction: column;
-      height: 100%;
+      margin-top: 20px;
     }
 
     .messages, .posts {
@@ -104,6 +104,7 @@
       color: #000;
       outline: none;
       font-size: 14px;
+      resize: none;
     }
 
     .input-area button {
@@ -175,7 +176,6 @@
     <div class="tab-bar">
       <div class="tab active" id="chatTab" onclick="switchTab('chat')">質問</div>
       <div class="tab" id="newsTab" onclick="switchTab('news')">ニュース</div>
-      <div class="tab" id="boardTab" onclick="switchTab('board')">掲示板</div>
     </div>
 
     <!-- 質問画面 -->
@@ -189,17 +189,27 @@
           <button onclick="sendMessage()">送信</button>
         </div>
       </div>
+
+      <!-- 掲示板を質問タブ内に追加 -->
+      <div class="board-box">
+        <h2>掲示板</h2>
+        <div class="posts" id="chatPostBox"></div>
+        <div class="input-area">
+          <textarea id="chatPostInput" placeholder="投稿内容を入力..."></textarea>
+          <button onclick="postChatMessage()">投稿</button>
+        </div>
+      </div>
     </div>
 
     <!-- ニュース画面 -->
     <div class="content" id="newsContent">
-      <!-- ランキング1〜5 -->
+      <!-- ニュースカード -->
       <div class="news-card">
         <div class="news-rank">1</div>
         <img src="https://via.placeholder.com/80" alt="news1">
         <div class="news-info">
           <h3>最新ニュースタイトル1</h3>
-          <p>Yahooニュース風のランキング形式サンプル記事です。</p>
+          <p>記事概要1</p>
         </div>
       </div>
       <div class="news-card">
@@ -207,129 +217,89 @@
         <img src="https://via.placeholder.com/80" alt="news2">
         <div class="news-info">
           <h3>最新ニュースタイトル2</h3>
-          <p>2位の記事サンプルです。タイトルと概要を表示しています。</p>
+          <p>記事概要2</p>
         </div>
       </div>
-      <div class="news-card">
-        <div class="news-rank">3</div>
-        <img src="https://via.placeholder.com/80" alt="news3">
-        <div class="news-info">
-          <h3>最新ニュースタイトル3</h3>
-          <p>3位の記事サンプルです。ランキング形式で表示。</p>
-        </div>
-      </div>
-      <div class="news-card">
-        <div class="news-rank">4</div>
-        <img src="https://via.placeholder.com/80" alt="news4">
-        <div class="news-info">
-          <h3>最新ニュースタイトル4</h3>
-          <p>4位の記事サンプルです。ランキング形式で表示。</p>
-        </div>
-      </div>
-      <div class="news-card">
-        <div class="news-rank">5</div>
-        <img src="https://via.placeholder.com/80" alt="news5">
-        <div class="news-info">
-          <h3>最新ニュースタイトル5</h3>
-          <p>5位の記事サンプルです。ランキング形式で表示。</p>
-        </div>
-      </div>
-    </div>
 
-    <!-- 掲示板画面 -->
-<div class="content" id="boardContent">
-  <div class="board-box">
-    <div class="posts" id="postBox"></div>
-    <div class="input-area">
-      <textarea id="postInput" placeholder="投稿内容を入力..."></textarea>
-      <button onclick="postMessage()">投稿</button>
+      <!-- 掲示板をニュースタブ内に追加 -->
+      <div class="board-box">
+        <h2>掲示板</h2>
+        <div class="posts" id="newsPostBox"></div>
+        <div class="input-area">
+          <textarea id="newsPostInput" placeholder="投稿内容を入力..."></textarea>
+          <button onclick="postNewsMessage()">投稿</button>
+        </div>
+      </div>
     </div>
   </div>
-</div>
 
-<script>
-  function postMessage() {
-    const input = document.getElementById('postInput');
-    const postBox = document.getElementById('postBox');
-    const text = input.value.trim();
-    if (text === '') return;
+  <script>
+    function switchTab(tab) {
+      const chatTab = document.getElementById('chatTab');
+      const newsTab = document.getElementById('newsTab');
 
-    const post = document.createElement('div');
-    post.classList.add('post');
-    post.textContent = text;
+      const chatContent = document.getElementById('chatContent');
+      const newsContent = document.getElementById('newsContent');
 
-    postBox.appendChild(post);
-    input.value = '';
-    postBox.scrollTop = postBox.scrollHeight;
-  }
-</script>
-<!-- タブ切替と掲示板画面 -->
-<div class="tab-bar">
-  <div class="tab active" id="chatTab" onclick="switchTab('chat')">質問</div>
-  <div class="tab" id="newsTab" onclick="switchTab('news')">ニュース</div>
-  <div class="tab" id="boardTab" onclick="switchTab('board')">掲示板</div>
-</div>
+      chatTab.classList.remove('active');
+      newsTab.classList.remove('active');
 
-<div class="content" id="chatContent">
-  <!-- 質問画面の内容 -->
-</div>
+      chatContent.classList.remove('active');
+      newsContent.classList.remove('active');
 
-<div class="content" id="newsContent">
-  <!-- ニュース画面の内容 -->
-</div>
-
-<div class="content" id="boardContent">
-  <div class="board-box">
-    <div class="posts" id="postBox"></div>
-    <div class="input-area">
-      <textarea id="postInput" placeholder="投稿内容を入力..."></textarea>
-      <button onclick="postMessage()">投稿</button>
-    </div>
-  </div>
-</div>
-
-<script>
-  function switchTab(tab) {
-    const chatTab = document.getElementById('chatTab');
-    const newsTab = document.getElementById('newsTab');
-    const boardTab = document.getElementById('boardTab');
-
-    const chatContent = document.getElementById('chatContent');
-    const newsContent = document.getElementById('newsContent');
-    const boardContent = document.getElementById('boardContent');
-
-    chatTab.classList.remove('active');
-    newsTab.classList.remove('active');
-    boardTab.classList.remove('active');
-
-    chatContent.classList.remove('active');
-    newsContent.classList.remove('active');
-    boardContent.classList.remove('active');
-
-    if (tab === 'chat') {
-      chatTab.classList.add('active');
-      chatContent.classList.add('active');
-    } else if (tab === 'news') {
-      newsTab.classList.add('active');
-      newsContent.classList.add('active');
-    } else if (tab === 'board') {
-      boardTab.classList.add('active');
-      boardContent.classList.add('active');
+      if(tab === 'chat') {
+        chatTab.classList.add('active');
+        chatContent.classList.add('active');
+      } else if(tab === 'news') {
+        newsTab.classList.add('active');
+        newsContent.classList.add('active');
+      }
     }
-  }
 
-  function postMessage() {
-    const input = document.getElementById('postInput');
-    const postBox = document.getElementById('postBox');
-    const text = input.value.trim();
-    if (text === '') return;
+    function sendMessage() {
+      const input = document.getElementById('userInput');
+      const chatBox = document.getElementById('chatBox');
+      const text = input.value.trim();
+      if(text === '') return;
 
-    const post = document.createElement('div');
-    post.classList.add('post');
-    post.textContent = text;
+      const message = document.createElement('div');
+      message.classList.add('message', 'user');
+      message.textContent = text;
 
-    postBox.appendChild(post);
-    input.value = '';
-    postBox.scrollTop = postBox.scrollHeight;
-  }
-</script>
+      chatBox.appendChild(message);
+      input.value = '';
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function postChatMessage() {
+      const input = document.getElementById('chatPostInput');
+      const postBox = document.getElementById('chatPostBox');
+      const text = input.value.trim();
+      if(text === '') return;
+
+      const post = document.createElement('div');
+      post.classList.add('post');
+      post.textContent = text;
+
+      postBox.appendChild(post);
+      input.value = '';
+      postBox.scrollTop = postBox.scrollHeight;
+    }
+
+    function postNewsMessage() {
+      const input = document.getElementById('newsPostInput');
+      const postBox = document.getElementById('newsPostBox');
+      const text = input.value.trim();
+      if(text === '') return;
+
+      const post = document.createElement('div');
+      post.classList.add('post');
+      post.textContent = text;
+
+      postBox.appendChild(post);
+      input.value = '';
+      postBox.scrollTop = postBox.scrollHeight;
+    }
+  </script>
+</body>
+</html>
