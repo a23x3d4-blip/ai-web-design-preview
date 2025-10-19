@@ -1,151 +1,147 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Chat-like Q&A Interface</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ChatGPT風質問画面</title>
   <style>
-    /* Simple scrollbar styling for the message pane */
-    .chat-scroll::-webkit-scrollbar { height: 8px; width: 8px; }
-    .chat-scroll::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 999px; }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f0f0f0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .chat-container {
+      display: flex;
+      flex-direction: column;
+      width: 600px;
+      height: 80vh;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+
+    .chat-header {
+      background: #10a37f;
+      color: #fff;
+      text-align: center;
+      padding: 15px;
+      font-weight: bold;
+    }
+
+    .chat-box {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    .message {
+      margin-bottom: 15px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .message.user {
+      align-items: flex-end;
+    }
+
+    .message.bot {
+      align-items: flex-start;
+    }
+
+    .bubble {
+      max-width: 80%;
+      padding: 10px 15px;
+      border-radius: 10px;
+      line-height: 1.4;
+    }
+
+    .user .bubble {
+      background: #10a37f;
+      color: #fff;
+      border-bottom-right-radius: 0;
+    }
+
+    .bot .bubble {
+      background: #e0e0e0;
+      color: #000;
+      border-bottom-left-radius: 0;
+    }
+
+    .input-area {
+      display: flex;
+      border-top: 1px solid #ddd;
+      padding: 10px;
+      background: #fafafa;
+    }
+
+    .input-area input {
+      flex: 1;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      outline: none;
+      font-size: 14px;
+    }
+
+    .input-area button {
+      margin-left: 10px;
+      background: #10a37f;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      padding: 10px 20px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .input-area button:hover {
+      background: #0e8c6e;
+    }
   </style>
 </head>
-<body class="min-h-screen bg-gray-50">
-  <div class="min-h-screen max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12">
-    <!-- Sidebar -->
-    <aside class="lg:col-span-3 bg-white border-r p-4 flex flex-col gap-4">
-      <div class="flex items-center justify-between">
-        <div class="flex items-center gap-3">
-          <div class="w-8 h-8 bg-indigo-600 rounded flex items-center justify-center text-white font-bold">G</div>
-          <div class="text-sm font-semibold">Chat UI</div>
-        </div>
-        <button id="newChat" class="text-xs bg-indigo-600 text-white px-3 py-1 rounded">New chat</button>
+<body>
+  <div class="chat-container">
+    <div class="chat-header">ChatGPT風質問画面</div>
+    <div class="chat-box" id="chatBox">
+      <div class="message bot">
+        <div class="bubble">こんにちは！質問をどうぞ。</div>
       </div>
-
-      <div class="flex-1 overflow-auto">
-        <ul id="conversations" class="space-y-2">
-          <li class="p-2 rounded bg-gray-100 text-sm">Example conversation — click to open</li>
-          <li class="p-2 rounded hover:bg-gray-100 text-sm">Shopping list</li>
-          <li class="p-2 rounded hover:bg-gray-100 text-sm">Homework help</li>
-        </ul>
-      </div>
-
-      <div class="text-xs text-gray-500">Model: <span class="font-medium">GPT-5 Thinking mini</span></div>
-    </aside>
-
-    <!-- Main chat area -->
-    <main class="lg:col-span-9 p-6 flex flex-col" style="height:100vh;">
-      <header class="flex items-center justify-between pb-4 border-b">
-        <div>
-          <div class="text-lg font-semibold">Chat</div>
-          <div class="text-xs text-gray-500">Ask anything — the assistant will answer below.</div>
-        </div>
-        <div class="flex items-center gap-3">
-          <button id="themeToggle" class="p-2 rounded bg-gray-100 text-sm">Toggle dark</button>
-          <button class="p-2 rounded bg-gray-100 text-sm">Help</button>
-        </div>
-      </header>
-
-      <section id="chatPane" class="flex-1 overflow-auto chat-scroll py-6 px-3" style="scroll-behavior:smooth;">
-        <!-- system / assistant messages -->
-        <div id="messages" class="space-y-4 max-w-3xl mx-auto">
-          <div class="flex items-start gap-3">
-            <div class="w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center text-sm">A</div>
-            <div class="bg-white p-4 rounded-lg shadow-sm">
-              <div class="text-sm text-gray-800">こんにちは！質問を入力して送信してください。例："明日の天気は？"</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Input area -->
-      <form id="inputForm" class="border-t pt-4 bg-white p-4 sticky bottom-0">
-        <div class="max-w-3xl mx-auto flex gap-3 items-end">
-          <textarea id="userInput" rows="1" placeholder="質問を入力... (Shift+Enter で改行)" class="flex-1 p-3 border rounded-md resize-none"></textarea>
-          <div class="flex items-center gap-2">
-            <button type="button" id="regenerate" class="px-3 py-2 bg-gray-100 rounded text-sm">Regenerate</button>
-            <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded">Send</button>
-          </div>
-        </div>
-        <div class="max-w-3xl mx-auto mt-2 text-xs text-gray-400">Tip: Enterで送信、Shift+Enterで改行。</div>
-      </form>
-    </main>
+    </div>
+    <div class="input-area">
+      <input type="text" id="userInput" placeholder="質問を入力..." />
+      <button onclick="sendMessage()">送信</button>
+    </div>
   </div>
 
   <script>
-    const messagesEl = document.getElementById('messages');
-    const inputForm = document.getElementById('inputForm');
-    const userInput = document.getElementById('userInput');
-    const chatPane = document.getElementById('chatPane');
-    const newChat = document.getElementById('newChat');
-    const regenerate = document.getElementById('regenerate');
-    const themeToggle = document.getElementById('themeToggle');
+    function sendMessage() {
+      const input = document.getElementById('userInput');
+      const chatBox = document.getElementById('chatBox');
+      const text = input.value.trim();
+      if (text === '') return;
 
-    function appendMessage(role, text) {
-      const wrap = document.createElement('div');
-      wrap.className = 'flex items-start gap-3';
+      const userMsg = document.createElement('div');
+      userMsg.classList.add('message', 'user');
+      userMsg.innerHTML = `<div class="bubble">${text}</div>`;
+      chatBox.appendChild(userMsg);
 
-      const avatar = document.createElement('div');
-      avatar.className = 'w-8 h-8 rounded-full flex items-center justify-center text-sm text-white';
-      avatar.style.background = role === 'user' ? '#10B981' : '#4F46E5';
-      avatar.textContent = role === 'user' ? 'U' : 'A';
+      input.value = '';
+      chatBox.scrollTop = chatBox.scrollHeight;
 
-      const bubble = document.createElement('div');
-      bubble.className = 'p-4 rounded-lg shadow-sm';
-      bubble.style.background = role === 'user' ? '#DCFCE7' : '#FFFFFF';
-
-      const p = document.createElement('div');
-      p.className = 'text-sm text-gray-800';
-      p.textContent = text;
-
-      bubble.appendChild(p);
-      wrap.appendChild(avatar);
-      wrap.appendChild(bubble);
-      messagesEl.appendChild(wrap);
-      chatPane.scrollTop = chatPane.scrollHeight;
-    }
-
-    inputForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const text = userInput.value.trim();
-      if (!text) return;
-      appendMessage('user', text);
-      userInput.value = '';
-
-      // Simulate assistant thinking and reply
-      appendMessage('assistant', '...thinking');
       setTimeout(() => {
-        // replace the last '...thinking' with a fake answer
-        const last = messagesEl.lastElementChild.querySelector('div.text-sm');
-        if (last && last.textContent === '...thinking') {
-          last.textContent = 'これはサンプル応答です。実際のChatGPTの返答のようにここに応答が表示されます。';
-        }
+        const botMsg = document.createElement('div');
+        botMsg.classList.add('message', 'bot');
+        botMsg.innerHTML = `<div class="bubble">「${text}」についてですね。考え中...</div>`;
+        chatBox.appendChild(botMsg);
+        chatBox.scrollTop = chatBox.scrollHeight;
       }, 800);
-    });
-
-    userInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault();
-        inputForm.requestSubmit();
-      }
-    });
-
-    newChat.addEventListener('click', () => {
-      messagesEl.innerHTML = '';
-      appendMessage('assistant', '新しいチャットを開始しました。質問をどうぞ。');
-    });
-
-    regenerate.addEventListener('click', () => {
-      appendMessage('assistant', '再生成しました — こちらはサンプルの再生成応答です。');
-    });
-
-    themeToggle.addEventListener('click', () => {
-      document.body.classList.toggle('bg-gray-900');
-      document.body.classList.toggle('bg-gray-50');
-      document.body.classList.toggle('text-white');
-    });
-
+    }
   </script>
 </body>
 </html>
