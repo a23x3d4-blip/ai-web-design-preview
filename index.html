@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>質問・ニュース・掲示板統合サイト</title>
+  <title>質問・ニュース・掲示板サイト</title>
   <style>
     body {
       margin: 0;
@@ -63,7 +63,6 @@
     .message-box, .board-box {
       display: flex;
       flex-direction: column;
-      margin-top: 20px;
     }
 
     .messages, .posts {
@@ -173,12 +172,14 @@
 </head>
 <body>
   <div class="container">
+    <!-- タブ -->
     <div class="tab-bar">
       <div class="tab active" id="chatTab" onclick="switchTab('chat')">質問</div>
       <div class="tab" id="newsTab" onclick="switchTab('news')">ニュース</div>
+      <div class="tab" id="boardTab" onclick="switchTab('board')">掲示板</div>
     </div>
 
-    <!-- 質問画面 -->
+    <!-- 質問タブ -->
     <div class="content active" id="chatContent">
       <div class="message-box">
         <div class="messages" id="chatBox">
@@ -189,21 +190,10 @@
           <button onclick="sendMessage()">送信</button>
         </div>
       </div>
-
-      <!-- 掲示板を質問タブ内に追加 -->
-      <div class="board-box">
-        <h2>掲示板</h2>
-        <div class="posts" id="chatPostBox"></div>
-        <div class="input-area">
-          <textarea id="chatPostInput" placeholder="投稿内容を入力..."></textarea>
-          <button onclick="postChatMessage()">投稿</button>
-        </div>
-      </div>
     </div>
 
-    <!-- ニュース画面 -->
+    <!-- ニュースタブ -->
     <div class="content" id="newsContent">
-      <!-- ニュースカード -->
       <div class="news-card">
         <div class="news-rank">1</div>
         <img src="https://via.placeholder.com/80" alt="news1">
@@ -220,14 +210,40 @@
           <p>記事概要2</p>
         </div>
       </div>
+      <div class="news-card">
+        <div class="news-rank">3</div>
+        <img src="https://via.placeholder.com/80" alt="news3">
+        <div class="news-info">
+          <h3>最新ニュースタイトル3</h3>
+          <p>記事概要3</p>
+        </div>
+      </div>
+      <div class="news-card">
+        <div class="news-rank">4</div>
+        <img src="https://via.placeholder.com/80" alt="news4">
+        <div class="news-info">
+          <h3>最新ニュースタイトル4</h3>
+          <p>記事概要4</p>
+        </div>
+      </div>
+      <div class="news-card">
+        <div class="news-rank">5</div>
+        <img src="https://via.placeholder.com/80" alt="news5">
+        <div class="news-info">
+          <h3>最新ニュースタイトル5</h3>
+          <p>記事概要5</p>
+        </div>
+      </div>
+    </div>
 
-      <!-- 掲示板をニュースタブ内に追加 -->
+    <!-- 掲示板タブ -->
+    <div class="content" id="boardContent">
       <div class="board-box">
         <h2>掲示板</h2>
-        <div class="posts" id="newsPostBox"></div>
+        <div class="posts" id="postBox"></div>
         <div class="input-area">
-          <textarea id="newsPostInput" placeholder="投稿内容を入力..."></textarea>
-          <button onclick="postNewsMessage()">投稿</button>
+          <textarea id="postInput" placeholder="投稿内容を入力..."></textarea>
+          <button onclick="postMessage()">投稿</button>
         </div>
       </div>
     </div>
@@ -235,25 +251,13 @@
 
   <script>
     function switchTab(tab) {
-      const chatTab = document.getElementById('chatTab');
-      const newsTab = document.getElementById('newsTab');
-
-      const chatContent = document.getElementById('chatContent');
-      const newsContent = document.getElementById('newsContent');
-
-      chatTab.classList.remove('active');
-      newsTab.classList.remove('active');
-
-      chatContent.classList.remove('active');
-      newsContent.classList.remove('active');
-
-      if(tab === 'chat') {
-        chatTab.classList.add('active');
-        chatContent.classList.add('active');
-      } else if(tab === 'news') {
-        newsTab.classList.add('active');
-        newsContent.classList.add('active');
-      }
+      const tabs = ['chat', 'news', 'board'];
+      tabs.forEach(t => {
+        document.getElementById(t + 'Tab').classList.remove('active');
+        document.getElementById(t + 'Content').classList.remove('active');
+      });
+      document.getElementById(tab + 'Tab').classList.add('active');
+      document.getElementById(tab + 'Content').classList.add('active');
     }
 
     function sendMessage() {
@@ -271,24 +275,9 @@
       chatBox.scrollTop = chatBox.scrollHeight;
     }
 
-    function postChatMessage() {
-      const input = document.getElementById('chatPostInput');
-      const postBox = document.getElementById('chatPostBox');
-      const text = input.value.trim();
-      if(text === '') return;
-
-      const post = document.createElement('div');
-      post.classList.add('post');
-      post.textContent = text;
-
-      postBox.appendChild(post);
-      input.value = '';
-      postBox.scrollTop = postBox.scrollHeight;
-    }
-
-    function postNewsMessage() {
-      const input = document.getElementById('newsPostInput');
-      const postBox = document.getElementById('newsPostBox');
+    function postMessage() {
+      const input = document.getElementById('postInput');
+      const postBox = document.getElementById('postBox');
       const text = input.value.trim();
       if(text === '') return;
 
