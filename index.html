@@ -138,16 +138,16 @@
       background: #333;
     }
 
-    /* ニュース画面 */
+    /* ニュース画面ランキング形式 */
     .news-card {
       background: #fff;
       border: 1px solid #ccc;
       border-radius: 10px;
-      margin-bottom: 20px;
+      margin-bottom: 15px;
       padding: 15px;
       display: flex;
-      gap: 15px;
       align-items: center;
+      gap: 15px;
       transition: transform 0.2s;
     }
 
@@ -155,11 +155,12 @@
       transform: scale(1.02);
     }
 
-    .news-card img {
-      width: 100px;
-      height: 100px;
-      border-radius: 5px;
-      object-fit: cover;
+    .news-rank {
+      font-size: 24px;
+      font-weight: bold;
+      width: 40px;
+      text-align: center;
+      color: #000;
     }
 
     .news-info {
@@ -176,6 +177,13 @@
       margin: 0;
       font-size: 14px;
       color: #444;
+    }
+
+    .news-card img {
+      width: 80px;
+      height: 80px;
+      border-radius: 5px;
+      object-fit: cover;
     }
   </style>
 </head>
@@ -204,26 +212,47 @@
     <!-- ニュース画面 -->
     <div class="content" id="newsContent">
       <div class="news-card">
-        <img src="https://via.placeholder.com/100" alt="news1">
+        <div class="news-rank">1</div>
+        <img src="https://via.placeholder.com/80" alt="news1">
         <div class="news-info">
           <h3>最新ニュースタイトル1</h3>
-          <p>これはYahooニュース風のサンプル記事です。内容の概要をここに表示します。</p>
+          <p>Yahooニュース風のランキング形式サンプル記事です。</p>
         </div>
       </div>
 
       <div class="news-card">
-        <img src="https://via.placeholder.com/100" alt="news2">
+        <div class="news-rank">2</div>
+        <img src="https://via.placeholder.com/80" alt="news2">
         <div class="news-info">
           <h3>最新ニュースタイトル2</h3>
-          <p>クリックで詳細を開くようなデザインも追加できます。</p>
+          <p>2位の記事サンプルです。タイトルと概要を表示しています。</p>
         </div>
       </div>
 
       <div class="news-card">
-        <img src="https://via.placeholder.com/100" alt="news3">
+        <div class="news-rank">3</div>
+        <img src="https://via.placeholder.com/80" alt="news3">
         <div class="news-info">
           <h3>最新ニュースタイトル3</h3>
-          <p>カード型レイアウトで画像とテキストを整列しています。</p>
+          <p>3位の記事サンプルです。ランキング形式で表示。</p>
+        </div>
+      </div>
+
+      <div class="news-card">
+        <div class="news-rank">4</div>
+        <img src="https://via.placeholder.com/80" alt="news4">
+        <div class="news-info">
+          <h3>最新ニュースタイトル4</h3>
+          <p>4位の記事サンプルです。ランキング形式で表示。</p>
+        </div>
+      </div>
+
+      <div class="news-card">
+        <div class="news-rank">5</div>
+        <img src="https://via.placeholder.com/80" alt="news5">
+        <div class="news-info">
+          <h3>最新ニュースタイトル5</h3>
+          <p>5位の記事サンプルです。ランキング形式で表示。</p>
         </div>
       </div>
     </div>
@@ -274,3 +303,4 @@
   </script>
 </body>
 </html>
+
