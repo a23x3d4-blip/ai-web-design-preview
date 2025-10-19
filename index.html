@@ -3,199 +3,149 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Screen-like Web Design — HTML</title>
+  <title>Chat-like Q&A Interface</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Simple scrollbar styling for the message pane */
+    .chat-scroll::-webkit-scrollbar { height: 8px; width: 8px; }
+    .chat-scroll::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 999px; }
+  </style>
 </head>
-<body class="min-h-screen bg-gray-50 text-gray-800 antialiased">
-  <!-- Top navigation -->
-  <header class="bg-white shadow-sm">
-    <div class="max-w-7xl mx-auto px-6 lg:px-8">
-      <div class="flex items-center justify-between h-16">
-        <div class="flex items-center gap-4">
-          <div class="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-lg flex items-center justify-center text-white font-bold">A</div>
-          <div>
-            <div class="text-lg font-semibold">Acme Studio</div>
-            <div class="text-xs text-gray-500">Dashboard · Design preview</div>
-          </div>
+<body class="min-h-screen bg-gray-50">
+  <div class="min-h-screen max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12">
+    <!-- Sidebar -->
+    <aside class="lg:col-span-3 bg-white border-r p-4 flex flex-col gap-4">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 bg-indigo-600 rounded flex items-center justify-center text-white font-bold">G</div>
+          <div class="text-sm font-semibold">Chat UI</div>
         </div>
-        <nav class="hidden md:flex items-center gap-6 text-sm text-gray-600">
-          <a class="hover:text-gray-900">Home</a>
-          <a class="hover:text-gray-900">Projects</a>
-          <a class="hover:text-gray-900">Components</a>
-          <button class="ml-4 px-3 py-1.5 bg-indigo-600 text-white rounded-md text-sm shadow-sm">New Project</button>
-        </nav>
-        <div class="md:hidden">
-          <button aria-label="open menu" class="p-2 rounded-md bg-gray-100">☰</button>
-        </div>
+        <button id="newChat" class="text-xs bg-indigo-600 text-white px-3 py-1 rounded">New chat</button>
       </div>
-    </div>
-  </header>
 
-  <!-- Main content area -->
-  <main class="max-w-7xl mx-auto px-6 lg:px-8 py-10">
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-      <!-- Left column: primary card / hero -->
-      <section class="lg:col-span-7">
-        <div class="bg-white rounded-2xl shadow-md p-6">
-          <div class="flex items-start gap-6">
-            <div class="flex-1">
-              <h1 class="text-2xl font-bold">Visual editor preview</h1>
-              <p class="mt-2 text-sm text-gray-600">A clean preview of the current screen design. Use the controls on the right to tweak layout, colors, and spacing.</p>
+      <div class="flex-1 overflow-auto">
+        <ul id="conversations" class="space-y-2">
+          <li class="p-2 rounded bg-gray-100 text-sm">Example conversation — click to open</li>
+          <li class="p-2 rounded hover:bg-gray-100 text-sm">Shopping list</li>
+          <li class="p-2 rounded hover:bg-gray-100 text-sm">Homework help</li>
+        </ul>
+      </div>
 
-              <!-- Mocked screen inside the card -->
-              <div class="mt-6 border rounded-lg overflow-hidden">
-                <div class="bg-gradient-to-r from-gray-800 via-indigo-700 to-purple-600 text-white p-6 flex items-center justify-between">
-                  <div>
-                    <div class="text-sm uppercase opacity-80">Hero</div>
-                    <div class="text-2xl font-semibold mt-1">Stunning headline that sells the idea</div>
-                    <div class="mt-2 text-sm opacity-90">Short supporting sentence — clear, concise, and helpful.</div>
-                    <div class="mt-4 flex gap-3">
-                      <button class="bg-white text-indigo-700 px-4 py-2 rounded-md font-medium">Get started</button>
-                      <button class="bg-white/10 border border-white/20 px-4 py-2 rounded-md">Learn more</button>
-                    </div>
-                  </div>
-                  <div class="hidden md:block w-48 h-32 bg-white/20 rounded-lg flex items-center justify-center">Preview</div>
-                </div>
+      <div class="text-xs text-gray-500">Model: <span class="font-medium">GPT-5 Thinking mini</span></div>
+    </aside>
 
-                <div class="p-5 bg-white">
-                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div class="p-4 border rounded-lg">
-                      <div class="font-semibold">Feature A</div>
-                      <div class="text-sm text-gray-500 mt-1">Short description of the feature and why it matters to the user.</div>
-                    </div>
-                    <div class="p-4 border rounded-lg">
-                      <div class="font-semibold">Feature B</div>
-                      <div class="text-sm text-gray-500 mt-1">Short description of the feature and why it matters to the user.</div>
-                    </div>
-                  </div>
-
-                  <div class="mt-6">
-                    <h3 class="font-semibold">Details</h3>
-                    <p class="text-sm text-gray-600 mt-2">This area shows a longer block of content — paragraphs, lists, or screenshots can live here. It's intended to represent the main body of the screen you're previewing.</p>
-                  </div>
-                </div>
-              </div>
-
-            </div>
-
-            <!-- Right inside-card controls (compact) -->
-            <aside class="w-40 hidden lg:block">
-              <div class="bg-gray-50 p-3 rounded-lg">
-                <div class="text-xs uppercase text-gray-500">Canvas</div>
-                <div class="mt-3 space-y-2">
-                  <div class="text-sm">Width</div>
-                  <div class="w-full bg-white rounded-md p-2 text-sm border">Desktop</div>
-                  <div class="text-sm mt-3">Theme</div>
-                  <div class="w-full bg-white rounded-md p-2 text-sm border">Indigo</div>
-                </div>
-              </div>
-            </aside>
-          </div>
+    <!-- Main chat area -->
+    <main class="lg:col-span-9 p-6 flex flex-col" style="height:100vh;">
+      <header class="flex items-center justify-between pb-4 border-b">
+        <div>
+          <div class="text-lg font-semibold">Chat</div>
+          <div class="text-xs text-gray-500">Ask anything — the assistant will answer below.</div>
         </div>
+        <div class="flex items-center gap-3">
+          <button id="themeToggle" class="p-2 rounded bg-gray-100 text-sm">Toggle dark</button>
+          <button class="p-2 rounded bg-gray-100 text-sm">Help</button>
+        </div>
+      </header>
 
-        <!-- lower set of cards -->
-        <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div class="bg-white p-4 rounded-xl shadow-sm">
-            <div class="text-sm font-semibold">Activity</div>
-            <div class="text-xs text-gray-500 mt-2">Recent changes and collaborators</div>
-            <ul class="mt-3 text-sm space-y-2">
-              <li class="flex items-center justify-between"><span>John edited header</span><span class="text-xs text-gray-400">2m</span></li>
-              <li class="flex items-center justify-between"><span>Page published</span><span class="text-xs text-gray-400">1h</span></li>
-            </ul>
-          </div>
-
-          <div class="bg-white p-4 rounded-xl shadow-sm">
-            <div class="text-sm font-semibold">Assets</div>
-            <div class="text-xs text-gray-500 mt-2">Images and symbols used on the screen</div>
-            <div class="mt-3 grid grid-cols-3 gap-2">
-              <div class="h-16 bg-gray-100 rounded-md flex items-center justify-center text-xs">PNG</div>
-              <div class="h-16 bg-gray-100 rounded-md flex items-center justify-center text-xs">SVG</div>
-              <div class="h-16 bg-gray-100 rounded-md flex items-center justify-center text-xs">IMG</div>
+      <section id="chatPane" class="flex-1 overflow-auto chat-scroll py-6 px-3" style="scroll-behavior:smooth;">
+        <!-- system / assistant messages -->
+        <div id="messages" class="space-y-4 max-w-3xl mx-auto">
+          <div class="flex items-start gap-3">
+            <div class="w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center text-sm">A</div>
+            <div class="bg-white p-4 rounded-lg shadow-sm">
+              <div class="text-sm text-gray-800">こんにちは！質問を入力して送信してください。例："明日の天気は？"</div>
             </div>
           </div>
         </div>
-
       </section>
 
-      <!-- Right column: inspector / controls -->
-      <aside class="lg:col-span-5">
-        <div class="sticky top-6">
-          <div class="bg-white rounded-2xl shadow-md p-6">
-            <div class="flex items-center justify-between">
-              <div>
-                <div class="text-sm text-gray-500">Inspector</div>
-                <div class="text-lg font-semibold">Properties</div>
-              </div>
-              <div class="text-xs text-gray-400">autosaved</div>
-            </div>
-
-            <div class="mt-4 space-y-4">
-              <div>
-                <label class="block text-xs text-gray-600">Background</label>
-                <div class="mt-2 flex gap-2">
-                  <button class="px-3 py-1.5 border rounded-md text-sm">Light</button>
-                  <button class="px-3 py-1.5 border rounded-md text-sm">Dark</button>
-                </div>
-              </div>
-
-              <div>
-                <label class="block text-xs text-gray-600">Spacing</label>
-                <div class="mt-2">
-                  <input type="range" min="0" max="40" value="12" class="w-full" />
-                </div>
-              </div>
-
-              <div>
-                <label class="block text-xs text-gray-600">Typography</label>
-                <div class="mt-2 grid grid-cols-2 gap-2">
-                  <select class="p-2 border rounded-md">
-                    <option>Inter</option>
-                    <option>System</option>
-                    <option>Serif</option>
-                  </select>
-                  <input type="number" value="16" class="p-2 border rounded-md" />
-                </div>
-              </div>
-
-              <div class="pt-3 border-t">
-                <div class="text-xs text-gray-500">Preview sizes</div>
-                <div class="mt-2 flex gap-2">
-                  <button class="px-2 py-1 border rounded">320</button>
-                  <button class="px-2 py-1 border rounded">768</button>
-                  <button class="px-2 py-1 border rounded">1280</button>
-                </div>
-              </div>
-            </div>
+      <!-- Input area -->
+      <form id="inputForm" class="border-t pt-4 bg-white p-4 sticky bottom-0">
+        <div class="max-w-3xl mx-auto flex gap-3 items-end">
+          <textarea id="userInput" rows="1" placeholder="質問を入力... (Shift+Enter で改行)" class="flex-1 p-3 border rounded-md resize-none"></textarea>
+          <div class="flex items-center gap-2">
+            <button type="button" id="regenerate" class="px-3 py-2 bg-gray-100 rounded text-sm">Regenerate</button>
+            <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded">Send</button>
           </div>
-
-          <div class="mt-4 bg-white rounded-xl p-4 shadow-sm">
-            <div class="text-sm font-semibold">Team</div>
-            <div class="text-xs text-gray-500 mt-1">Collaborators on this design</div>
-            <div class="mt-3 flex -space-x-2">
-              <div class="w-8 h-8 rounded-full bg-indigo-500 text-white flex items-center justify-center text-xs border-2 border-white">JS</div>
-              <div class="w-8 h-8 rounded-full bg-green-500 text-white flex items-center justify-center text-xs border-2 border-white">ML</div>
-              <div class="w-8 h-8 rounded-full bg-pink-500 text-white flex items-center justify-center text-xs border-2 border-white">AK</div>
-            </div>
-          </div>
-
         </div>
-      </aside>
-
-    </div>
-  </main>
-
-  <footer class="bg-white border-t">
-    <div class="max-w-7xl mx-auto px-6 lg:px-8 py-6 text-sm text-gray-500 flex items-center justify-between">
-      <div>© <span id="year"></span> Acme Studio</div>
-      <div class="space-x-4">
-        <a class="hover:underline">Privacy</a>
-        <a class="hover:underline">Terms</a>
-      </div>
-    </div>
-  </footer>
+        <div class="max-w-3xl mx-auto mt-2 text-xs text-gray-400">Tip: Enterで送信、Shift+Enterで改行。</div>
+      </form>
+    </main>
+  </div>
 
   <script>
-    document.getElementById('year').textContent = new Date().getFullYear();
+    const messagesEl = document.getElementById('messages');
+    const inputForm = document.getElementById('inputForm');
+    const userInput = document.getElementById('userInput');
+    const chatPane = document.getElementById('chatPane');
+    const newChat = document.getElementById('newChat');
+    const regenerate = document.getElementById('regenerate');
+    const themeToggle = document.getElementById('themeToggle');
+
+    function appendMessage(role, text) {
+      const wrap = document.createElement('div');
+      wrap.className = 'flex items-start gap-3';
+
+      const avatar = document.createElement('div');
+      avatar.className = 'w-8 h-8 rounded-full flex items-center justify-center text-sm text-white';
+      avatar.style.background = role === 'user' ? '#10B981' : '#4F46E5';
+      avatar.textContent = role === 'user' ? 'U' : 'A';
+
+      const bubble = document.createElement('div');
+      bubble.className = 'p-4 rounded-lg shadow-sm';
+      bubble.style.background = role === 'user' ? '#DCFCE7' : '#FFFFFF';
+
+      const p = document.createElement('div');
+      p.className = 'text-sm text-gray-800';
+      p.textContent = text;
+
+      bubble.appendChild(p);
+      wrap.appendChild(avatar);
+      wrap.appendChild(bubble);
+      messagesEl.appendChild(wrap);
+      chatPane.scrollTop = chatPane.scrollHeight;
+    }
+
+    inputForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const text = userInput.value.trim();
+      if (!text) return;
+      appendMessage('user', text);
+      userInput.value = '';
+
+      // Simulate assistant thinking and reply
+      appendMessage('assistant', '...thinking');
+      setTimeout(() => {
+        // replace the last '...thinking' with a fake answer
+        const last = messagesEl.lastElementChild.querySelector('div.text-sm');
+        if (last && last.textContent === '...thinking') {
+          last.textContent = 'これはサンプル応答です。実際のChatGPTの返答のようにここに応答が表示されます。';
+        }
+      }, 800);
+    });
+
+    userInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        inputForm.requestSubmit();
+      }
+    });
+
+    newChat.addEventListener('click', () => {
+      messagesEl.innerHTML = '';
+      appendMessage('assistant', '新しいチャットを開始しました。質問をどうぞ。');
+    });
+
+    regenerate.addEventListener('click', () => {
+      appendMessage('assistant', '再生成しました — こちらはサンプルの再生成応答です。');
+    });
+
+    themeToggle.addEventListener('click', () => {
+      document.body.classList.toggle('bg-gray-900');
+      document.body.classList.toggle('bg-gray-50');
+      document.body.classList.toggle('text-white');
+    });
+
   </script>
 </body>
 </html>
